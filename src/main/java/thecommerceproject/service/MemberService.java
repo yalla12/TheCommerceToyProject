@@ -17,17 +17,18 @@ public class MemberService {
     /**
      * 회원가입
      *
-     * @param memberRequestDto
+     * @param memberRequestDto 입력한 회원 정보
+     * @Return Member
      */
-    public String createMember(MemberRequestDto memberRequestDto) {
+    public Member createMember(MemberRequestDto memberRequestDto) throws Exception {
 
         //아이디 중복체크
         boolean dupMemberId = memberRepository.existsByMemberId(memberRequestDto.getMemberId());
-        if(dupMemberId) return "";
+        if(dupMemberId) throw new RuntimeException("아이디 중복");
 
         //전화번호 중복체크
         boolean dupphoneNumber =  memberRepository.existsByPhoneNumber(memberRequestDto.getPhoneNumber());
-        if(dupphoneNumber) return "";
+        if(dupphoneNumber) throw new RuntimeException("전화번호 중복");
 
         Member member = new Member(
                 memberRequestDto.getMemberId(),
@@ -38,9 +39,8 @@ public class MemberService {
                 memberRequestDto.getEmail()
         );
 
-        memberRepository.save(member);
-
-        return "";
+        return memberRepository.save(member);
     }
+
 
 }

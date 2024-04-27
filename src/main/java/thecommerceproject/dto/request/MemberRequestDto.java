@@ -1,5 +1,7 @@
 package thecommerceproject.dto.request;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +11,8 @@ import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class MemberRequestDto {
 
     @NotBlank(message = "회원 아이디를 입력해주세요")

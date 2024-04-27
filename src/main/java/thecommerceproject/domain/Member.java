@@ -16,7 +16,6 @@ import javax.persistence.*;
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String memberId;
 
     @Column(nullable = false)
