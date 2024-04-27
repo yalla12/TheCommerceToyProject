@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Member {
+public class Member extends Timestamped{
 
     @Id
     private String memberId;

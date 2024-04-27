@@ -6,16 +6,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import thecommerceproject.domain.Member;
 import thecommerceproject.dto.request.MemberRequestDto;
 import thecommerceproject.service.MemberService;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Function;
 
 import static org.mockito.BDDMockito.given;
 
 import static org.mockito.Mockito.verify;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -76,6 +86,26 @@ class MemberControllerTest {
 
         // 해당 객체의 메소드가 실행되었는지 체크
         verify(memberService).createMember(memberRequestDto);
+    }
+
+
+    @Test //테스트 실패 (JPA metamodel must not be empty 에러
+    @DisplayName("회원 목록 조회")
+    void searchMember() throws Exception {
+
+        given(memberService.SearchMember(0,2, 0)).willReturn(Page.empty());
+
+        mockMvc.perform(
+                        get("/member/search")
+                                .param("page","0")
+                                .param("pageSize","2")
+                                .param("sort","0"))
+                .andExpect(status().isCreated())
+                .andDo(print());
+
+        verify(memberService).SearchMember(0,2,0);
+
+
     }
 
 

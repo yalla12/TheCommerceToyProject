@@ -7,13 +7,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import thecommerceproject.domain.Member;
 import thecommerceproject.dto.request.MemberRequestDto;
 import thecommerceproject.repository.MemberRepository;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -23,6 +27,7 @@ class MemberServiceTest {
 
     @InjectMocks
     MemberService memberService;
+
 
     @Test
     @DisplayName("회원 가입")
@@ -54,6 +59,39 @@ class MemberServiceTest {
         Assertions.assertEquals("testName", returnMember.getName());
         Assertions.assertEquals("01011112222", returnMember.getPhoneNumber());
         Assertions.assertEquals("testEmail@test.com", returnMember.getEmail());
+    }
+
+    @Test
+    @DisplayName("회원 목록 조회")
+    void searchMember() {
+        // 임시 데이터 삽입
+        for(int i = 0; i < 10; i++) {
+            memberRepository.save( new Member(
+                    "testId"+i,
+                    "testPwd"+i,
+                    "testNick"+i,
+                    "testName"+i,
+                    "01011112222+i",
+                    "testEmail@test.com+i"
+            ));
+        }
+        // 0번 페이지 2개씩 가입일 기준 정렬
+        Pageable pageable = PageRequest.of(0, 2, Sort.Direction.ASC, "createAt");
+
+        //1번 페이지 3개씩 이름 기준 정렬
+//        Pageable pageable = PageRequest.of(1, 3, Sort.Direction.ASC, "name");
+
+        Page<Member> result = memberRepository.findAll(pageable);
+
+        System.out.println("@@@@@@@@@@@@@@@@ 결과 확인 @@@@@@@@@@@@@@@");
+        for(int i = 0; i < result.getSize(); i++) {
+            System.out.print("memberId: " + result.getContent().get(i).getMemberId() + ", ");
+            System.out.print("name: " + result.getContent().get(i).getName() + ", ");
+            System.out.print("createAt: " + result.getContent().get(i).getCreateAt() + ", ");
+            System.out.println();
+
+        }
+
     }
 
 }
