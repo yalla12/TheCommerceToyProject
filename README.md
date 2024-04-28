@@ -45,4 +45,7 @@ h2 확인 주소
 
 ## API
 Swagger를 통한 API 문서화
+
+![image](https://github.com/yalla12/TheCommerceToyProject/assets/63985137/76b4e866-a68d-4de2-9e82-aee8595976b2)
+
 - API 확인 URL : http://localhost:8080/swagger-ui/
