@@ -3,6 +3,7 @@ package thecommerceproject.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.net.URI;
 @Api(tags = "member API")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -29,6 +31,7 @@ public class MemberController {
     @ApiOperation(value = "회원 가입")
     @PostMapping("/member/create")
     public ResponseEntity createMember(@Valid @RequestBody MemberRequestDto memberRequestDto) throws Exception {
+        log.info("회원가입 controller 실행");
         memberService.createMember(memberRequestDto);
         return ResponseEntity.created(URI.create("/member/create")).build();
     }
@@ -43,6 +46,7 @@ public class MemberController {
     @ApiOperation(value = "회원 목록 조회")
     @GetMapping("/member/search")
     public Page<Member> searchMember(@RequestParam("page") int page,@RequestParam("pageSize") int pageSize,@RequestParam("sort") int sort) {
+        log.info("회목 목록 조회 controller 실행");
         return memberService.searchMember(page,pageSize, sort);
     }
 
@@ -55,6 +59,7 @@ public class MemberController {
     @ApiOperation(value = "회원 정보 수정")
     @PutMapping("/member/update/{memberId}")
     public Member updateMember(@PathVariable String memberId, @Valid @RequestBody UpdateMemberDto updateMemberDto) {
+        log.info("회원 정보 수정 controller 실행");
         return memberService.updateMember(memberId, updateMemberDto);
     }
 

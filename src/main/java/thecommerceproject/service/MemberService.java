@@ -1,6 +1,7 @@
 package thecommerceproject.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import thecommerceproject.repository.MemberRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -27,6 +29,7 @@ public class MemberService {
      */
     @Transactional
     public Member createMember(MemberRequestDto memberRequestDto) throws Exception {
+        log.info("회원가입 service 실행");
 
         //아이디 중복체크
         boolean dupMemberId = memberRepository.existsByMemberId(memberRequestDto.getMemberId());
@@ -57,6 +60,8 @@ public class MemberService {
      */
     @Transactional(readOnly = true)
     public Page<Member> searchMember(int offset, int limit, int sort) {
+        log.info("회원 목록 조회 service 실행");
+
         Sort sortby;
         if(sort == 0) {
             sortby = Sort.by("createAt").ascending();
@@ -76,6 +81,7 @@ public class MemberService {
      */
     @Transactional
     public Member updateMember(String memberId, UpdateMemberDto updateMemberDto) {
+        log.info("회원 정보 수정 service 실행");
         // 아이디 존재 여부 확인
         Member member = memberRepository.findById(memberId).orElse(null);
         if(member == null) throw new RuntimeException("해당하는 아이디가 없습니다.");
