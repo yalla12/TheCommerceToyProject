@@ -6,4 +6,7 @@ import thecommerceproject.domain.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, String> {
+
+    boolean existsByMemberId(String memberId);
+    boolean existsByPhoneNumber(String phoneNumber);
 }
