@@ -32,6 +32,14 @@ public class Member extends Timestamped{
 
     @Column(nullable = false)
     private String email;
+
+    public void updateMember(String memberPwd, String nickname, String name, String phoneNumber, String email) {
+        this.memberPwd = memberPwd;
+        this.nickname = nickname;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
 }
 
 

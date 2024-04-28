@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thecommerceproject.domain.Member;
 import thecommerceproject.dto.request.MemberRequestDto;
+import thecommerceproject.dto.request.UpdateMemberDto;
 import thecommerceproject.repository.MemberRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
@@ -58,7 +56,7 @@ public class MemberService {
      * @return Page<Member> 페이지 설정에 해당 되는 회원 리스트
      */
     @Transactional(readOnly = true)
-    public Page<Member> SearchMember(int offset, int limit, int sort) {
+    public Page<Member> searchMember(int offset, int limit, int sort) {
         Sort sortby;
         if(sort == 0) {
             sortby = Sort.by("createAt").ascending();
@@ -68,6 +66,36 @@ public class MemberService {
         Pageable pageable = PageRequest.of(offset, limit, sortby);
 
         return memberRepository.findAll(pageable);
+    }
+
+    /**
+     *
+     * @param memberId 회원 아이디
+     * @param updateMemberDto 수정 정보
+     * @return Member 수정된 회원 정보
+     */
+    @Transactional
+    public Member updateMember(String memberId, UpdateMemberDto updateMemberDto) {
+        // 아이디 존재 여부 확인
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if(member == null) throw new RuntimeException("해당하는 아이디가 없습니다.");
+
+        //전화번호 중복체크
+        boolean dupphoneNumber =  memberRepository.existsByPhoneNumber(updateMemberDto.getPhoneNumber());
+        if(dupphoneNumber) throw new RuntimeException("전화번호 중복");
+
+
+        member.updateMember(
+                updateMemberDto.getMemberPwd(),
+                updateMemberDto.getNickname(),
+                updateMemberDto.getName(),
+                updateMemberDto.getPhoneNumber(),
+                updateMemberDto.getEmail()
+                );
+
+        memberRepository.save(member);
+
+        return memberRepository.save(member);
     }
 
 

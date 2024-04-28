@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import thecommerceproject.domain.Member;
 import thecommerceproject.dto.request.MemberRequestDto;
+import thecommerceproject.dto.request.UpdateMemberDto;
 import thecommerceproject.repository.MemberRepository;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -91,6 +92,47 @@ class MemberServiceTest {
             System.out.println();
 
         }
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정")
+    void updateMember() {
+
+        memberRepository.save( new Member(
+                "testId",
+                "testPwd",
+                "testNick",
+                "testName",
+                "01011112222",
+                "testEmail@test.com"
+        ));
+
+        UpdateMemberDto updateMemberDto = new UpdateMemberDto(
+                "UpdatePwd",
+                "UpdateNick",
+                "UpdateName",
+                "01011112222",
+                "UpdateEmail@test.com"
+        );
+
+
+        Member member =  new Member(
+                "testId",
+                "UpdatePwd",
+                "UpdateNick",
+                "UpdateName",
+                "01011112222",
+                "UpdateEmail@test.com"
+        );
+
+
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
+        Member returnMember = memberService.updateMember("testId", updateMemberDto);
+        Assertions.assertEquals("UpdatePwd", returnMember.getMemberPwd());
+        Assertions.assertEquals("UpdateNick", returnMember.getNickname());
+        Assertions.assertEquals("UpdateName", returnMember.getName());
+        Assertions.assertEquals("01011112222", returnMember.getPhoneNumber());
+        Assertions.assertEquals("UpdateEmail@test.com", returnMember.getEmail());
 
     }
 
